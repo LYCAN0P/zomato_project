@@ -1,7 +1,7 @@
-DevOps Project - Dr. Kastro Kiran
+DevOps Project - Zomato
 Deployment of ZOMATO Project
 --------------------------------------------
-Repo URL: https://github.com/KastroVKiran/DevOps-Project-Zomato-Kastro.git
+Repo URL: https://github.com/LYCANOPVKiran/DevOps-Project-Zomato-LYCANOP.git
 
 
 1. Launch an Instance (Ubuntu, 24.04, t2.large, 30 GB)
@@ -134,7 +134,7 @@ pipeline {
         }
         stage ("Git Checkout") {
             steps {
-                git 'https://github.com/KastroVKiran/Zomato-Project-Kastro.git'
+                git 'https://github.com/LYCANOP/zomato_project.git'
             }
         }
         stage("Sonarqube Analysis"){
@@ -177,8 +177,8 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker') {
-                        sh "docker tag zomato kastrov/zomato:latest "
-                        sh "docker push kastrov/zomato:latest "
+                        sh "docker tag zomato LYCANOPv/zomato:latest "
+                        sh "docker push LYCANOPv/zomato:latest "
                     }
                 }
             }
@@ -187,16 +187,16 @@ pipeline {
             steps {
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview kastrov/zomato:latest'
-                       sh 'docker-scout cves kastrov/zomato:latest'
-                       sh 'docker-scout recommendations kastrov/zomato:latest'
+                       sh 'docker-scout quickview LYCANOPv/zomato:latest'
+                       sh 'docker-scout cves LYCANOPv/zomato:latest'
+                       sh 'docker-scout recommendations LYCANOPv/zomato:latest'
                    }
                 }
             }
         }
         stage ("Deploy to Container") {
             steps {
-                sh 'docker run -d --name zomato -p 3000:3000 kastrov/zomato:latest'
+                sh 'docker run -d --name zomato -p 3000:3000 LYCANOPv/zomato:latest'
             }
         }
     }
@@ -219,7 +219,7 @@ pipeline {
                 </body>
                 </html>
             """,
-            to: 'kastrokiran@gmail.com',
+            to: 'hellogg1734@gmail.com',
             mimeType: 'text/html',
             attachmentsPattern: 'trivy.txt'
         }
@@ -474,8 +474,8 @@ Note 2: Run the VS Code Editor/Power Shell/Command Prompt as Administrator, to a
 
 Open vs code editor and execute the below commands; 
 Step 01: Create EKS Cluster using eksctl
-# Create Cluster. I will keep the cluster name as "kastrocluster"
-eksctl create cluster --name=kastrocluster \
+# Create Cluster. I will keep the cluster name as "zomatocluster"
+eksctl create cluster --name=zomatocluster \
                       --region=ap-northeast-1 \
                       --zones=ap-northeast-1a,ap-northeast-1c \
                       --without-nodegroup                  
@@ -486,12 +486,12 @@ To resolve this issue, you can either write the entire command on a single line 
 
 Approach 1: Single Line Command (In this video i will prefer this)
 Simply run the entire command in one line without using backslashes for line continuation:
-eksctl create cluster --name=kastrocluster --region=ap-northeast-1 --zones=ap-northeast-1a,ap-northeast-1c --without-nodegroup
+eksctl create cluster --name=zomatocluster --region=ap-northeast-1 --zones=ap-northeast-1a,ap-northeast-1c --without-nodegroup
 
 
 Approach 2: Use PowerShell’s Backtick for Line Continuation
 If you want to split the command across multiple lines, you can use the backtick character (`) in PowerShell for line continuation:
-eksctl create cluster --name=kastrocluster `
+eksctl create cluster --name=zomatocluster `
                       --region=ap-northeast-1 `
                       --zones=ap-northeast-1a,ap-northeast-1c `
                       --without-nodegroup
@@ -500,8 +500,8 @@ Note: Make sure there is no space after the backtick.
 
 It will take atleast 20-25 minutes for the cluster to create.
 
-To verify the cluster creation ---> Goto Cloud Formation service in AWS ----> You should see a stack got created with the name "kastrocluster". Make sure in the vs code editor the cluster will get created. As said earlier it will take atleast 20 minutes.
-Once the cluster is ready, you will see "EKS Cluster "kastrocluster" in "us-east-1" region is ready" in vs code editor. wait till you see this.
+To verify the cluster creation ---> Goto Cloud Formation service in AWS ----> You should see a stack got created with the name "zomatocluster". Make sure in the vs code editor the cluster will get created. As said earlier it will take atleast 20 minutes.
+Once the cluster is ready, you will see "EKS Cluster "zomatocluster" in "us-east-1" region is ready" in vs code editor. wait till you see this.
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Get List of clusters
 eksctl get cluster
@@ -521,25 +521,25 @@ eksctl utils associate-iam-oidc-provider \
 # Replace with region & cluster name
 eksctl utils associate-iam-oidc-provider \
     --region ap-northeast-1 \
-    --cluster kastrocluster \
+    --cluster zomatocluster \
     --approve
 
 (OR)
-eksctl utils associate-iam-oidc-provider --region ap-northeast-1 --cluster kastrocluster --approve
+eksctl utils associate-iam-oidc-provider --region ap-northeast-1 --cluster zomatocluster --approve
 
 (OR)
 eksctl utils associate-iam-oidc-provider `
     --region uap-northeast-1 `
-    --cluster kastrocluster `
+    --cluster zomatocluster `
     --approve
 
 Step 03: Create Node Group with additional Add-Ons in Public Subnets
 These add-ons will create the respective IAM policies for us automatically within our Node Group role.
 
 # Create Public Node Group   
-eksctl create nodegroup --cluster=kastrocluster \
+eksctl create nodegroup --cluster=zomatocluster \
                        --region=ap-northeast-1 \
-                       --name=kastrodemo-ng-public1 \
+                       --name=zomatodemo-ng-public1 \
                        --node-type=t3.medium \
                        --nodes=2 \
                        --nodes-min=2 \
@@ -555,12 +555,12 @@ eksctl create nodegroup --cluster=kastrocluster \
                        --alb-ingress-access
 
 (OR)
-eksctl create nodegroup --cluster=kastrocluster --region=ap-northeast-1 --name=kastrodemo-ng-public1 --node-type=t3.medium --nodes=2 --nodes-min=2 --nodes-max=4 --node-volume-size=20 --ssh-access --ssh-public-key=Prajwal --managed --asg-access --external-dns-access --full-ecr-access --appmesh-access --alb-ingress-access
+eksctl create nodegroup --cluster=zomatocluster --region=ap-northeast-1 --name=zomatodemo-ng-public1 --node-type=t3.medium --nodes=2 --nodes-min=2 --nodes-max=4 --node-volume-size=20 --ssh-access --ssh-public-key=Prajwal --managed --asg-access --external-dns-access --full-ecr-access --appmesh-access --alb-ingress-access
 
 (OR)
-eksctl create nodegroup --cluster=kastrocluster `
+eksctl create nodegroup --cluster=zomatocluster `
     --region=ap-northeast-1 `
-    --name=kastrodemo-ng-public1 `
+    --name=zomatodemo-ng-public1 `
     --node-type=t3.medium `
     --nodes=2 `
     --nodes-min=2 `
@@ -587,16 +587,16 @@ eksctl get clusters
 
 # Capture Node Group name
 eksctl get nodegroup --cluster=<clusterName>
-eksctl get nodegroup --cluster=kastrocluster
+eksctl get nodegroup --cluster=zomatocluster
 
 # Delete Node Group
 eksctl delete nodegroup --cluster=<clusterName> --name=<nodegroupName>
-eksctl delete nodegroup --cluster=kastrocluster --name=kastrodemo-ng-public1
+eksctl delete nodegroup --cluster=zomatocluster --name=zomatodemo-ng-public1
 
 Step 07: Delete Cluster
 # Delete Cluster
 eksctl delete cluster <clusterName>
-eksctl delete cluster kastrocluster
+eksctl delete cluster zomatocluster
 ********************************************************************************
 ********************************************************************************
 Let us deploy the same application in the EKS cluster also
