@@ -1,7 +1,10 @@
 pipeline {
 
     agent any
-
+    
+    tools {
+        nodejs 'node23'
+    }
     environment {
         DOCKER_IMAGE = 'lycan1/zomato'
     }
